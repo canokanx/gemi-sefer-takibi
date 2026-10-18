@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Gemi Sefer Takibi</title>
-<script>var WEB_SURUM = 2; /* GemiSeferTakibiArayuz */</script>
+<script>var WEB_SURUM = 3; /* GemiSeferTakibiArayuz */</script>
 <style>
 :root{
   --teal:#0E7C86; --teal-koyu:#0A5C63; --teal-acik:#E3F2F3; --mercan:#F2704F;
@@ -456,9 +456,13 @@ function ayarCiz(){
   var g = AYAR.guncelleme_bilgi || {};
   $("surum-bilgi").textContent = "Uygulama " + (AYAR.apk_surum||"?") + " • Arayüz " + WEB_SURUM;
   $("guncelleme-durum").textContent = (g.durum || "") + (g.zaman ? "  (" + g.zaman + ")" : "") + (AYAR.kurulum_hata ? "  • Son kurulum: " + AYAR.kurulum_hata : "");
-  $("yukle-btn").style.display = g.apk_var ? "" : "none";
-  $("banner").classList.toggle("acik", !!g.apk_var);
-  $("banner-metin").textContent = g.apk_var ? "⬆ Yeni sürüm hazır: " + (g.apk_ad||"") : "";
+  // yuklu surum kodu: "1.1 (2)" -> 2. Banner sadece sunucudaki surum daha yeniyse gorunur
+  var m = String(AYAR.apk_surum||"").match(/\((\d+)\)/), yuklu = m ? parseInt(m[1],10) : 0;
+  var yeniVar = !!g.apk_var && Number(g.apk_surum||0) > yuklu;
+  $("yukle-btn").style.display = yeniVar ? "" : "none";
+  $("banner").classList.toggle("acik", yeniVar);
+  $("banner-metin").textContent = yeniVar ? "⬆ Yeni sürüm hazır: " + (g.apk_ad||"") : "";
+  if (!yeniVar && g.apk_var && g.durum && g.durum.indexOf("Yeni uygulama") == 0) $("guncelleme-durum").textContent = "Güncel (uygulama " + (AYAR.apk_surum||"") + ")";
 }
 function ayar(x){ Yerel.ayarYaz(x.id.slice(2), x.checked ? "true" : "false"); AYAR[x.id.slice(2)] = x.checked; }
 function kodUygula(){
