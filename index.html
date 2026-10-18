@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Gemi Sefer Takibi</title>
-<script>var WEB_SURUM = 1; /* GemiSeferTakibiArayuz */</script>
+<script>var WEB_SURUM = 2; /* GemiSeferTakibiArayuz */</script>
 <style>
 :root{
   --teal:#0E7C86; --teal-koyu:#0A5C63; --teal-acik:#E3F2F3; --mercan:#F2704F;
@@ -477,7 +477,8 @@ function guncellemeKontrol(goster){
     clearInterval(gSayac);
     var d = json(r, {});
     AYAR = json(Yerel.ayarGetir(), AYAR); ayarCiz();
-    if (d.web_yeni) Yerel.arayuzuYenile();          // yeni arayuz indi: hemen gecis yap
+    // yeni arayuz indiyse ve calisan sayfa eskiyse bir kez yeniden yukle
+    if (d.web_yeni && Number(AYAR.web_surum || 0) > WEB_SURUM) Yerel.arayuzuYenile();
   }, 1000);
 }
 var ySayac = null;
