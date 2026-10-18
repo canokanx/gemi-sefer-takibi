@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Gemi Sefer Takibi</title>
-<script>var WEB_SURUM = 5; /* GemiSeferTakibiArayuz */</script>
+<script>var WEB_SURUM = 6; /* GemiSeferTakibiArayuz */</script>
 <style>
 :root{
   --teal:#0E7C86; --teal-koyu:#0A5C63; --teal-acik:#E3F2F3; --mercan:#F2704F;
@@ -174,6 +174,7 @@ textarea{width:100%;min-height:70px;border:1px solid var(--cizgi);border-radius:
       <h3>Güncelleme</h3>
       <div class="satir" id="surum-bilgi"></div>
       <div class="satir" id="guncelleme-durum"></div>
+      <div class="satir" id="guncelleme-not" style="margin-top:4px"></div>
       <button class="btn ikincil" onclick="guncellemeKontrol(true)">Güncellemeleri kontrol et</button>
       <button class="btn mercan" id="yukle-btn" style="display:none" onclick="guncellemeYukle()">Yeni sürümü yükle</button>
       <button class="btn ikincil" id="tarayici-btn" style="display:none" onclick="tarayicidaIndir()">Tarayıcıyla indir (yükleme olmazsa)</button>
@@ -461,6 +462,15 @@ function ayarCiz(){
   var m = String(AYAR.apk_surum||"").match(/\((\d+)\)/), yuklu = m ? parseInt(m[1],10) : 0;
   var yeniVar = !!g.apk_var && Number(g.apk_surum||0) > yuklu;
   $("yukle-btn").style.display = yeniVar ? "" : "none";
+  $("guncelleme-not").textContent = g.notlar ? "📝 Son sürüm notu: " + g.notlar : "";
+  // uygulama yeni guncellendiyse bir kez haber ver
+  try {
+    var once = localStorage.getItem("son_apk") || "";
+    if (once && AYAR.apk_surum && once != AYAR.apk_surum) {
+      $("ust-durum").textContent = "✔ Uygulama güncellendi: " + AYAR.apk_surum;
+    }
+    if (AYAR.apk_surum) localStorage.setItem("son_apk", AYAR.apk_surum);
+  } catch (x) {}
   $("tarayici-btn").style.display = yeniVar && Yerel.tarayicidaIndir ? "" : "none";
   $("banner").classList.toggle("acik", yeniVar);
   $("banner-metin").textContent = yeniVar ? "⬆ Yeni sürüm hazır: " + (g.apk_ad||"") : "";
