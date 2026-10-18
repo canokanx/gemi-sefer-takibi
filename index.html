@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Gemi Sefer Takibi</title>
+<script>var WEB_SURUM = 1; /* GemiSeferTakibiArayuz */</script>
+<style>
+:root{
+  --teal:#0E7C86; --teal-koyu:#0A5C63; --teal-acik:#E3F2F3; --mercan:#F2704F;
+  --zemin:#F4F8F8; --kart:#FFFFFF; --yazi:#1E2A2E; --soluk:#6B7C80; --cizgi:#DCE5E6;
+  --yesil:#2E7D32; --kirmizi:#C62828; --gri:#8A9599; --sari:#FFF4C2;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:var(--zemin);color:var(--yazi);
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:15px}
+body{display:flex;flex-direction:column}
+header{background:var(--teal);color:#fff;padding:12px 16px 10px;display:flex;align-items:center;gap:10px;flex:none}
+header .baslik{flex:1;min-width:0}
+header h1{margin:0;font-size:17px;font-weight:700;letter-spacing:.2px}
+header .alt{font-size:12px;opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.yenile{background:rgba(255,255,255,.16);border:0;color:#fff;border-radius:20px;padding:8px 12px;font-size:14px}
+.yenile.donuyor span{display:inline-block;animation:don 1s linear infinite}
+@keyframes don{to{transform:rotate(360deg)}}
+main{flex:1;overflow-y:auto;padding:12px 12px 90px}
+nav{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--cizgi);display:flex;
+  padding-bottom:env(safe-area-inset-bottom)}
+nav button{flex:1;border:0;background:none;padding:8px 2px 10px;font-size:11px;color:var(--soluk);display:flex;
+  flex-direction:column;align-items:center;gap:2px}
+nav button b{font-size:20px;font-weight:400;line-height:1.1}
+nav button.secili{color:var(--teal-koyu);font-weight:700}
+.sayfa{display:none}.sayfa.acik{display:block}
+.uyari{background:#FFEBEE;color:var(--kirmizi);border-radius:10px;padding:10px 12px;margin-bottom:10px;font-size:13px}
+.bilgi{background:var(--teal-acik);color:var(--teal-koyu);border-radius:10px;padding:10px 12px;margin-bottom:10px;font-size:13px}
+.serit{display:flex;background:#fff;border-radius:12px;padding:4px;margin-bottom:10px;border:1px solid var(--cizgi)}
+.serit button{flex:1;border:0;background:none;padding:9px 4px;border-radius:9px;font-size:14px;color:var(--soluk)}
+.serit button.secili{background:var(--teal);color:#fff;font-weight:600}
+.ara{width:100%;padding:11px 12px;border:1px solid var(--cizgi);border-radius:10px;font-size:15px;background:#fff;margin-bottom:8px}
+.cipler{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin-bottom:4px}
+.cip{flex:none;border:1px solid var(--cizgi);background:#fff;border-radius:16px;padding:6px 11px;font-size:13px;color:var(--yazi)}
+.cip.secili{background:var(--teal-koyu);color:#fff;border-color:var(--teal-koyu)}
+.kart{background:var(--kart);border-radius:12px;padding:11px 12px;margin-bottom:8px;border:1px solid var(--cizgi);
+  display:flex;gap:10px;align-items:flex-start}
+.kart.bizim{background:var(--sari);border-color:#EAD98A}
+.sira{flex:none;width:34px;text-align:center;font-weight:700;color:var(--teal-koyu);font-size:16px;padding-top:2px}
+.govde{flex:1;min-width:0}
+.ad{font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.satir{font-size:12.5px;color:var(--soluk);margin-top:3px}
+.rozet{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11.5px;font-weight:700;color:#fff;background:var(--gri);margin-right:6px}
+.r-BOGAZDA{background:var(--yesil)}.r-PLAN{background:var(--teal)}.r-HAZIR{background:#E08E00}.r-SP{background:#5C6BC0}
+.zil{flex:none;border:0;background:none;font-size:22px;padding:2px 4px;opacity:.35;filter:grayscale(1)}
+.zil.acik{opacity:1;filter:none}
+.bos{text-align:center;color:var(--soluk);padding:30px 10px;font-size:14px}
+.kutu{background:#fff;border:1px solid var(--cizgi);border-radius:12px;padding:12px;margin-bottom:10px}
+.kutu h3{margin:0 0 8px;font-size:15px;color:var(--teal-koyu)}
+.trafik-satir{display:flex;align-items:center;gap:8px;padding:7px 0;border-top:1px solid #EEF2F2}
+.trafik-satir:first-of-type{border-top:0}
+.trafik-satir .yon{width:112px;font-size:13px;font-weight:600;white-space:nowrap}
+.trafik-satir .sonra{flex:1;font-size:12.5px;color:var(--soluk)}
+.d-acik{background:var(--yesil)}.d-askida{background:var(--kirmizi)}.d-diger{background:var(--gri)}
+.cizelge{position:relative;height:22px;background:#E3E8E9;border-radius:6px;overflow:hidden;margin:4px 0 2px}
+.cizelge div{position:absolute;top:0;bottom:0;border-right:1px solid #fff}
+.cizelge .simdi{background:#111;width:2px;border:0;z-index:2}
+.saatler{display:flex;justify-content:space-between;font-size:10px;color:var(--soluk);margin-bottom:6px}
+.cizelge-etiket{font-size:12px;font-weight:600;margin-top:6px}
+.lejant{display:flex;gap:10px;font-size:12px;color:var(--soluk);margin-top:6px;flex-wrap:wrap}
+.lejant i{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-1px;margin-right:4px}
+.btn{border:0;border-radius:10px;padding:11px 14px;font-size:15px;font-weight:600;background:var(--teal);color:#fff;width:100%;margin-top:8px}
+.btn.ikincil{background:#fff;color:var(--teal-koyu);border:1px solid var(--teal)}
+.btn.mercan{background:var(--mercan)}
+textarea{width:100%;min-height:70px;border:1px solid var(--cizgi);border-radius:10px;padding:10px;font-size:13px;font-family:monospace}
+.anahtar{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-top:1px solid #EEF2F2;gap:10px}
+.anahtar:first-of-type{border-top:0}
+.anahtar span{font-size:14px}
+.anahtar small{display:block;color:var(--soluk);font-size:12px}
+.dugme{position:relative;width:48px;height:28px;flex:none}
+.dugme input{opacity:0;width:0;height:0}
+.dugme i{position:absolute;inset:0;background:#C7D1D3;border-radius:14px;transition:.2s}
+.dugme i:before{content:"";position:absolute;width:22px;height:22px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s}
+.dugme input:checked+i{background:var(--teal)}
+.dugme input:checked+i:before{transform:translateX(20px)}
+#harita-kap{height:calc(100vh - 250px);min-height:300px;border-radius:12px;overflow:hidden;border:1px solid var(--cizgi);background:#fff}
+#harita-kap iframe{width:100%;height:100%;border:0}
+.perde{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;z-index:10}
+.perde.acik{display:block}
+.alt-panel{position:fixed;left:0;right:0;bottom:0;max-height:88vh;overflow-y:auto;background:var(--zemin);
+  border-radius:16px 16px 0 0;padding:14px 14px 30px;transform:translateY(100%);transition:transform .22s;z-index:11}
+.alt-panel.acik{transform:none}
+.tutamak{width:40px;height:4px;background:#C7D1D3;border-radius:2px;margin:0 auto 12px}
+.tablo{width:100%;border-collapse:collapse;font-size:12.5px}
+.tablo td{padding:6px 4px;border-top:1px solid #EEF2F2;vertical-align:top}
+.tablo td:first-child{color:var(--soluk);white-space:nowrap;width:40%}
+.gecmis-satir{padding:7px 0;border-top:1px solid #EEF2F2;font-size:12.5px}
+.gecmis-satir b{color:var(--teal-koyu)}
+.banner{background:var(--mercan);color:#fff;padding:10px 14px;font-size:14px;display:none;align-items:center;gap:10px}
+.banner.acik{display:flex}
+.banner button{background:#fff;color:var(--mercan);border:0;border-radius:8px;padding:6px 12px;font-weight:700}
+.bolgeler{display:flex;gap:6px;overflow-x:auto;margin-bottom:8px}
+</style>
+</head>
+<body>
+<header>
+  <div class="baslik">
+    <h1 id="firma">Gemi Sefer Takibi</h1>
+    <div class="alt" id="ust-durum">Yükleniyor…</div>
+  </div>
+  <button class="yenile" id="yenile-btn" onclick="yenile()"><span>⟳</span></button>
+</header>
+<div class="banner" id="banner"><div style="flex:1" id="banner-metin"></div><button onclick="guncellemeYukle()">Yükle</button></div>
+
+<main>
+  <!-- BOGAZ -->
+  <section class="sayfa acik" id="s-bogaz">
+    <div id="hata-kutu"></div>
+    <div class="serit" id="bogaz-serit">
+      <button class="secili" data-k="I" onclick="bogazSec('I')">İstanbul</button>
+      <button data-k="C" onclick="bogazSec('C')">Çanakkale</button>
+    </div>
+    <input class="ara" id="ara" placeholder="🔍 Gemi adı, IMO, MMSI, tip…" oninput="listeCiz()">
+    <div class="cipler" id="cipler"></div>
+    <div id="liste"></div>
+  </section>
+
+  <!-- TRAFIK -->
+  <section class="sayfa" id="s-trafik">
+    <div class="kutu"><h3>Şu an boğaz trafiği</h3><div id="trafik-anlik"></div></div>
+    <div id="trafik-cizelge"></div>
+    <div class="lejant"><span><i class="d-acik"></i>Açık</span><span><i class="d-askida"></i>Askıda</span>
+      <span><i class="d-diger"></i>Planlanmamış</span><span><i style="background:#111;width:3px"></i>Şu an</span></div>
+    <div class="satir" style="margin-top:8px">Kaynak: Kıyı Emniyeti Türk Boğazları Gemi Trafik Yönü</div>
+  </section>
+
+  <!-- TAKIP -->
+  <section class="sayfa" id="s-takip">
+    <div class="bilgi">🔔 Takipteki gemiler listeye girince (Marmara'ya gelirken), durumu veya planlama saati değişince,
+      boğaza girince ve listeden çıkınca bildirim gelir. Boğaz listesinde gemideki zile dokunarak takibe alın.</div>
+    <div id="takip-liste"></div>
+  </section>
+
+  <!-- HARITA -->
+  <section class="sayfa" id="s-harita">
+    <div class="bolgeler" id="bolgeler"></div>
+    <div class="satir" id="harita-baslik" style="margin:0 0 6px">Marmara</div>
+    <div id="harita-kap"></div>
+  </section>
+
+  <!-- AYARLAR -->
+  <section class="sayfa" id="s-ayarlar">
+    <div class="kutu">
+      <h3>Kurulum kodu</h3>
+      <div class="satir" style="margin-bottom:6px">Masaüstü programda Yönetici → "📱 Telefon Kurulum Kodu" ile alınan kodu buraya yapıştırın.
+        Güncelleme adresi, şirket adı ve takip listesi telefona aktarılır.</div>
+      <textarea id="kod" placeholder="GST1:…"></textarea>
+      <button class="btn" onclick="kodUygula()">Kodu Uygula</button>
+      <div class="satir" id="kod-sonuc"></div>
+    </div>
+    <div class="kutu">
+      <h3>Bildirimler</h3>
+      <label class="anahtar"><span>Takipteki gemiler<small>Listeye giriş, durum/plan değişimi, boğazda, çıkış</small></span>
+        <span class="dugme"><input type="checkbox" id="a-bildirim_takip" onchange="ayar(this)"><i></i></span></label>
+      <label class="anahtar"><span>Trafik planı değişince<small>Ve yarının planı yayınlanınca</small></span>
+        <span class="dugme"><input type="checkbox" id="a-bildirim_trafik_plan" onchange="ayar(this)"><i></i></span></label>
+      <label class="anahtar"><span>Boğaz açılınca / askıya alınınca</span>
+        <span class="dugme"><input type="checkbox" id="a-bildirim_trafik_anlik" onchange="ayar(this)"><i></i></span></label>
+    </div>
+    <div class="kutu">
+      <h3>Arka plan</h3>
+      <label class="anahtar"><span>5 dakikada bir kontrol<small>Bildirim çubuğunda küçük bir "çalışıyor" bildirimi durur</small></span>
+        <span class="dugme"><input type="checkbox" id="a-servis_aktif" onchange="ayar(this)"><i></i></span></label>
+      <div class="satir" id="pil-durum"></div>
+      <button class="btn ikincil" id="pil-btn" onclick="Yerel.pilAyari()">Pil kısıtlamasını kaldır</button>
+    </div>
+    <div class="kutu">
+      <h3>Güncelleme</h3>
+      <div class="satir" id="surum-bilgi"></div>
+      <div class="satir" id="guncelleme-durum"></div>
+      <button class="btn ikincil" onclick="guncellemeKontrol(true)">Güncellemeleri kontrol et</button>
+      <button class="btn mercan" id="yukle-btn" style="display:none" onclick="guncellemeYukle()">Yeni sürümü yükle</button>
+    </div>
+  </section>
+</main>
+
+<nav id="nav">
+  <button class="secili" data-s="bogaz" onclick="sayfaAc('bogaz')"><b>⚓</b>Boğaz</button>
+  <button data-s="trafik" onclick="sayfaAc('trafik')"><b>🚦</b>Trafik</button>
+  <button data-s="takip" onclick="sayfaAc('takip')"><b>🔔</b>Takip</button>
+  <button data-s="harita" onclick="sayfaAc('harita')"><b>🗺</b>Harita</button>
+  <button data-s="ayarlar" onclick="sayfaAc('ayarlar')"><b>⚙</b>Ayarlar</button>
+</nav>
+
+<div class="perde" id="perde" onclick="paneliKapat()"></div>
+<div class="alt-panel" id="panel"><div class="tutamak"></div><div id="panel-icerik"></div></div>
+
+<script>
+"use strict";
+// ---------------------------------------------------------------- tarayicida onizleme icin sahte kopru
+if (!window.Yerel) {
+  window.Yerel = {
+    veri: function(){ return JSON.stringify(window.ORNEK_VERI || {}); }, durum: function(){ return '{"son_kontrol":"-","yenileniyor":false}'; },
+    yenile: function(){}, takipListesi: function(){ return localStorage.takip || "[]"; },
+    takipDegistir: function(i,m,a){ var l=JSON.parse(localStorage.takip||"[]"),k=i&&i.length==7?i:m,v=l.some(function(x){return x.k==i||x.k==m});
+      l=l.filter(function(x){return x.k!=i&&x.k!=m}); if(!v) l.push({k:k,ad:a}); localStorage.takip=JSON.stringify(l); return v?"0":"1"; },
+    ayarGetir: function(){ return JSON.stringify({firma:"ÖRNEK DENİZCİLİK",bildirim_takip:true,bildirim_trafik_plan:true,bildirim_trafik_anlik:true,
+      servis_aktif:true,apk_surum:"1.0 (1)",web_surum:WEB_SURUM,guncelleme_bilgi:{durum:"Güncel"},pil_serbest:false}); },
+    ayarYaz: function(){}, kurulumKodu: function(){ return "OK:0"; }, gecmisBaslat: function(){},
+    sonuc: function(t){ return t=="gecmis" ? JSON.stringify([{zaman:"15.10.2026 08:40",bogaz:"İstanbul",yon:"Kuzey → Güney",kalkis:"Novorossiysk",varis:"Aliaga"}]) : ""; },
+    guncellemeKontrolBaslat: function(){}, guncellemeYukleBaslat: function(){}, pilAyari: function(){}, acilisSayfasi: function(){ return ""; },
+    arayuzuYenile: function(){ location.reload(); }
+  };
+}
+
+var V = {}, AYAR = {}, TAKIP = [], BOGAZ = "I", FILTRE = "Hepsi", SAYFA = "bogaz", HARITA_P = null;
+var BOGAZ_AD = {I:"İstanbul", C:"Çanakkale"};
+var YON = {NS:"Kuzey → Güney", SN:"Güney → Kuzey"}, YON_OK = {NS:"↓ K→G", SN:"↑ G→K"};
+var TRAFIK_YON = {KG:"Kuzey → Güney", GK:"Güney → Kuzey"};
+var DURUM_YAZI = {acik:"AÇIK", askida:"ASKIDA", diger:"PLANSIZ"};
+var FILTRELER = ["Hepsi","Takiptekiler","BOĞAZDA","PLAN. GEÇİŞ","GEÇİŞE HAZIR","SP1","DİĞER"];
+var BOLGELER = [["Marmara",40.75,28.6,8],["İstanbul Boğazı",41.1,29.06,11],["Çanakkale Boğazı",40.2,26.45,10],
+                ["İzmit Körfezi",40.73,29.6,11],["Ege",38.9,25.8,7]];
+
+function $(id){ return document.getElementById(id); }
+function e(s){ return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];}); }
+function katla(s){ return String(s||"").toLocaleLowerCase("tr").replace(/ı/g,"i").replace(/ş/g,"s").replace(/ğ/g,"g").replace(/ü/g,"u").replace(/ö/g,"o").replace(/ç/g,"c").replace(/i̇/g,"i"); }
+function json(s, yedek){ try { var o = JSON.parse(s); return o==null?yedek:o; } catch(x){ return yedek; } }
+
+// ---------------------------------------------------------------- veri
+function oku(){
+  V = json(Yerel.veri(), {});
+  AYAR = json(Yerel.ayarGetir(), {});
+  TAKIP = json(Yerel.takipListesi(), []);
+  $("firma").textContent = AYAR.firma ? AYAR.firma : "Gemi Sefer Takibi";
+  var d = json(Yerel.durum(), {});
+  $("ust-durum").textContent = (AYAR.firma ? "Gemi Sefer Takibi • " : "") + (V.zaman ? "Liste: " + V.zaman : "Liste henüz alınmadı")
+      + (d.son_kontrol ? "  •  Kontrol: " + String(d.son_kontrol).slice(-5) : "");
+  hepsiniCiz();
+}
+function hepsiniCiz(){ hataCiz(); listeCiz(); trafikCiz(); takipCiz(); ayarCiz(); }
+function takipte(s){ return TAKIP.some(function(t){ return t.k && (t.k==s.imo || t.k==s.mmsi); }); }
+
+var yenilemeSayac = null;
+function yenile(){
+  Yerel.yenile();
+  $("yenile-btn").classList.add("donuyor");
+  var n = 0;
+  clearInterval(yenilemeSayac);
+  yenilemeSayac = setInterval(function(){
+    n++;
+    var d = json(Yerel.durum(), {});
+    if (!d.yenileniyor || n > 60) { clearInterval(yenilemeSayac); $("yenile-btn").classList.remove("donuyor"); oku(); }
+  }, 1500);
+}
+
+function hataCiz(){
+  $("hata-kutu").innerHTML = V.hata ? '<div class="uyari">⚠ ' + e(V.hata) + '<br>Son başarılı liste gösteriliyor.</div>' : "";
+}
+
+// ---------------------------------------------------------------- bogaz listesi
+function bogazSec(k){
+  BOGAZ = k;
+  [].forEach.call(document.querySelectorAll("#bogaz-serit button"), function(b){ b.classList.toggle("secili", b.dataset.k==k); });
+  listeCiz();
+}
+function filtreSec(f){ FILTRE = f; listeCiz(); }
+function rozetSinifi(d){
+  if (d=="BOĞAZDA") return "r-BOGAZDA"; if (d=="PLAN. GEÇİŞ") return "r-PLAN"; if (d=="GEÇİŞE HAZIR") return "r-HAZIR";
+  if (d && d.indexOf("SP")==0) return "r-SP"; return "";
+}
+function listeCiz(){
+  ["I","C"].forEach(function(k){
+    var b = document.querySelector('#bogaz-serit button[data-k="'+k+'"]');
+    b.textContent = BOGAZ_AD[k] + " (" + ((V[k]||[]).length) + ")";
+  });
+  $("cipler").innerHTML = FILTRELER.map(function(f){
+    return '<button class="cip'+(f==FILTRE?' secili':'')+'" onclick="filtreSec(\''+f+'\')">'+(f=="Takiptekiler"?"🔔 ":"")+e(f)+'</button>';
+  }).join("");
+  var liste = V[BOGAZ] || [], ara = katla($("ara").value.trim()), html = [];
+  liste.forEach(function(s, i){
+    var tk = takipte(s);
+    if (FILTRE=="Takiptekiler" && !tk) return;
+    if (FILTRE!="Hepsi" && FILTRE!="Takiptekiler" && s.durum!=FILTRE) return;
+    if (ara && katla(s.ad+" "+s.tip+" "+s.imo+" "+s.mmsi).indexOf(ara)<0) return;
+    html.push('<div class="kart'+(tk?' bizim':'')+'" onclick="detay(\''+BOGAZ+'\','+i+')">'
+      + '<div class="sira">'+(i+1)+'</div><div class="govde"><div class="ad">'+e(s.ad)+'</div>'
+      + '<div class="satir"><span class="rozet '+rozetSinifi(s.durum)+'">'+e(s.durum||"-")+'</span>'+e(s.plan_zamani||"")+'</div>'
+      + '<div class="satir">'+e(YON_OK[s.yon]||"")+(s.boy?' • '+e(s.boy)+' m':'')+' • '+e(s.tip||"")+'</div></div>'
+      + '<button class="zil'+(tk?' acik':'')+'" onclick="event.stopPropagation();takipDegistir(\''+BOGAZ+'\','+i+')">🔔</button></div>');
+  });
+  $("liste").innerHTML = html.length ? html.join("") : '<div class="bos">'+(liste.length ? "Bu filtrede gemi yok." : "Liste henüz alınmadı. ⟳ ile yenileyin.")+'</div>';
+}
+function takipDegistir(k, i){
+  var s = (V[k]||[])[i]; if (!s) return;
+  Yerel.takipDegistir(s.imo||"", s.mmsi||"", s.ad||"");
+  TAKIP = json(Yerel.takipListesi(), []);
+  listeCiz(); takipCiz();
+  if (PANEL_GEMI) detayCiz();
+}
+
+// ---------------------------------------------------------------- gemi detayi
+var PANEL_GEMI = null;
+function bul(imo, mmsi){
+  var sonuc = null;
+  ["I","C"].forEach(function(k){ (V[k]||[]).forEach(function(s, i){
+    if (!sonuc && ((imo && s.imo==imo) || (mmsi && s.mmsi==mmsi))) sonuc = {k:k, i:i, s:s};
+  }); });
+  return sonuc;
+}
+function detay(k, i){ var s = (V[k]||[])[i]; if (s) { PANEL_GEMI = {imo:s.imo, mmsi:s.mmsi, ad:s.ad}; detayCiz(); gecmisAl(s.imo); paneliAc(); } }
+function detayTakip(imo, mmsi, ad){ PANEL_GEMI = {imo:imo, mmsi:mmsi, ad:ad}; detayCiz(); gecmisAl(imo); paneliAc(); }
+function detayCiz(){
+  var g = PANEL_GEMI, b = bul(g.imo, g.mmsi), s = b ? b.s : null;
+  var tk = TAKIP.some(function(t){ return t.k && (t.k==g.imo || t.k==g.mmsi); });
+  var satirlar = [["IMO", g.imo||"-"], ["MMSI", g.mmsi||"-"]];
+  if (s) {
+    satirlar = satirlar.concat([["Boğaz", BOGAZ_AD[b.k]+" Boğazı — sıra "+(b.i+1)], ["Durum", s.durum||"-"], ["Planlama", s.plan_zamani||"-"],
+      ["Yön", YON[s.yon]||"-"], ["Boy", s.boy?s.boy+" m":"-"], ["Tip", s.tip||"-"], ["Kılavuz / Römorkör", (s.kilavuz||"-")+" / "+(s.romorkor||"-")],
+      ["SP1 / SP2", (s.sp1||"-")+" / "+(s.sp2||"-")]]);
+  } else satirlar.push(["Boğaz listesi", "Şu an listede değil"]);
+  $("panel-icerik").innerHTML = '<div class="ad" style="font-size:18px;white-space:normal">'+e(g.ad||g.imo||g.mmsi)+'</div>'
+    + (s ? '<div class="satir"><span class="rozet '+rozetSinifi(s.durum)+'">'+e(s.durum||"-")+'</span>'+e(s.plan_zamani||"")+'</div>' : "")
+    + '<div class="kutu" style="margin-top:10px"><table class="tablo">'+satirlar.map(function(r){ return "<tr><td>"+e(r[0])+"</td><td>"+e(r[1])+"</td></tr>"; }).join("")+'</table></div>'
+    + '<button class="btn'+(tk?' ikincil':'')+'" onclick="panelTakip()">'+(tk?"🔕 Takipten çıkar":"🔔 Takibe al")+'</button>'
+    + ((g.imo||g.mmsi) ? '<button class="btn ikincil" onclick="haritadaGoster()">🗺 Haritada göster</button>' : '')
+    + '<div class="kutu" style="margin-top:10px"><h3>Son boğaz geçişleri (Kıyı Emniyeti)</h3><div id="gecmis">'+(g.imo?"Yükleniyor…":"IMO yok")+'</div></div>';
+}
+function panelTakip(){
+  var g = PANEL_GEMI;
+  Yerel.takipDegistir(g.imo||"", g.mmsi||"", g.ad||"");
+  TAKIP = json(Yerel.takipListesi(), []);
+  listeCiz(); takipCiz(); detayCiz(); gecmisAl(g.imo, true);
+}
+var gecmisSayac = null;
+function gecmisAl(imo, onbellek){
+  clearInterval(gecmisSayac);
+  if (!imo) return;
+  if (!onbellek) Yerel.gecmisBaslat(imo);
+  var n = 0;
+  gecmisSayac = setInterval(function(){
+    var r = Yerel.sonuc("gecmis", imo);
+    if (!r && ++n < 60) return;
+    clearInterval(gecmisSayac);
+    var kap = $("gecmis"); if (!kap) return;
+    var d = json(r, null);
+    if (!d) { kap.textContent = "Alınamadı."; return; }
+    if (d.hata) { kap.textContent = "Alınamadı: " + d.hata; return; }
+    if (!d.length) { kap.textContent = "Geçiş kaydı yok."; return; }
+    kap.innerHTML = d.slice(0, 15).map(function(x){
+      return '<div class="gecmis-satir"><b>'+e(x.zaman)+'</b> • '+e(x.bogaz)+' • '+e(x.yon)+'<br>'+e(x.kalkis)+' → '+e(x.varis)+'</div>';
+    }).join("");
+  }, 500);
+}
+function paneliAc(){ $("perde").classList.add("acik"); $("panel").classList.add("acik"); }
+function paneliKapat(){ $("perde").classList.remove("acik"); $("panel").classList.remove("acik"); PANEL_GEMI = null; clearInterval(gecmisSayac); }
+
+// ---------------------------------------------------------------- trafik
+function dk(h){ return parseInt(h.slice(0,2),10)*60 + parseInt(h.slice(3,5),10); }
+function simdiSaat(){ var d = new Date(); return ("0"+d.getHours()).slice(-2)+":"+("0"+d.getMinutes()).slice(-2); }
+function bugunTarih(){ var d = new Date(); return ("0"+d.getDate()).slice(-2)+"."+("0"+(d.getMonth()+1)).slice(-2)+"."+d.getFullYear(); }
+function dilimler(gun, k, y){ return ((gun||{})[k]||{})[y] || []; }
+function trafikDurumu(t, k, y){
+  if (!t || t.tarih != bugunTarih()) return null;
+  var bugun = dilimler(t.bugun, k, y), yarin = dilimler(t.yarin, k, y), saat = simdiSaat();
+  for (var i = 0; i < bugun.length; i++){
+    var d = bugun[i];
+    if ((d[0] <= saat && saat < d[1]) || (d[1]=="23:59" && saat >= d[0])) {
+      var bitis = d[1], sonraki = null, sira = bugun.slice(i+1), kalan = sira.length; sira = sira.concat(yarin);
+      for (var j = 0; j < sira.length; j++){
+        var ertesi = j >= kalan ? "yarın " : "";
+        if (sira[j][2] == d[2]) { bitis = ertesi + sira[j][1]; continue; }
+        sonraki = [ertesi + sira[j][0], sira[j][2]]; break;
+      }
+      var ek = sonraki ? ({acik:"açılış ", askida:"askıya alınma "}[sonraki[1]] || "değişim ") + sonraki[0]
+                       : "bitiş " + bitis + (yarin.length ? "" : " • yarın planlanmadı");
+      return [d[2], d[3], ek];
+    }
+  }
+  return bugun.length ? null : ["diger", "Planlanmamış", ""];
+}
+function trafikCiz(){
+  var t = V.trafik, h = [];
+  ["I","C"].forEach(function(k){
+    h.push('<div class="satir" style="font-weight:700;color:var(--teal-koyu);margin-top:6px">'+BOGAZ_AD[k]+' Boğazı</div>');
+    ["KG","GK"].forEach(function(y){
+      var d = trafikDurumu(t, k, y);
+      h.push('<div class="trafik-satir"><div class="yon">'+TRAFIK_YON[y]+'</div><span class="rozet d-'+(d?d[0]:"diger")+'">'
+        +(d?DURUM_YAZI[d[0]]:"—")+'</span><div class="sonra">'+(d?e(d[2]):"bilgi yok")+'</div></div>');
+    });
+  });
+  $("trafik-anlik").innerHTML = h.join("");
+  var c = [];
+  if (t && t.bugun) {
+    [["bugun","Bugün "+(t.tarih||"")], ["yarin","Yarın "+(t.yarin_tarih||"")]].forEach(function(g){
+      var gun = t[g[0]];
+      if (g[0]=="yarin" && (!gun || !Object.keys(gun).length)) return;
+      c.push('<div class="kutu"><h3>'+e(g[1])+'</h3>');
+      ["I","C"].forEach(function(k){ ["KG","GK"].forEach(function(y){
+        var dl = dilimler(gun, k, y);
+        c.push('<div class="cizelge-etiket">'+BOGAZ_AD[k]+' • '+TRAFIK_YON[y]+'</div><div class="cizelge">'
+          + dl.map(function(d){ var a = dk(d[0]), b = d[1]=="23:59" ? 1440 : dk(d[1]);
+              return '<div class="d-'+d[2]+'" style="left:'+(a/14.4)+'%;width:'+((b-a)/14.4)+'%"></div>'; }).join("")
+          + (g[0]=="bugun" && t.tarih==bugunTarih() ? '<div class="simdi" style="left:'+(dk(simdiSaat())/14.4)+'%"></div>' : '')
+          + '</div><div class="saatler"><span>00</span><span>06</span><span>12</span><span>18</span><span>24</span></div>');
+      }); });
+      c.push('</div>');
+    });
+  } else c.push('<div class="bos">Trafik bilgisi henüz alınmadı.</div>');
+  $("trafik-cizelge").innerHTML = c.join("");
+}
+
+// ---------------------------------------------------------------- takip
+function takipCiz(){
+  if (!TAKIP.length) { $("takip-liste").innerHTML = '<div class="bos">Takipte gemi yok.</div>'; return; }
+  $("takip-liste").innerHTML = TAKIP.map(function(t){
+    var imo = t.k.length==7 ? t.k : "", mmsi = t.k.length==9 ? t.k : "", b = bul(imo, mmsi), s = b ? b.s : null;
+    if (s) { imo = s.imo || imo; mmsi = s.mmsi || mmsi; }
+    return '<div class="kart" onclick="detayTakip(\''+e(imo)+'\',\''+e(mmsi)+'\',\''+e(String(t.ad||"").replace(/'/g,""))+'\')">'
+      + '<div class="sira">'+(b ? (b.k=="I"?"İST":"ÇNK")+'<br><small>#'+(b.i+1)+'</small>' : '—')+'</div>'
+      + '<div class="govde"><div class="ad">'+e(t.ad||t.k)+'</div>'
+      + (s ? '<div class="satir"><span class="rozet '+rozetSinifi(s.durum)+'">'+e(s.durum||"-")+'</span>'+e(s.plan_zamani||"")+' • '+e(YON_OK[s.yon]||"")+'</div>'
+           : '<div class="satir">Boğaz listesinde değil • '+e(t.k)+'</div>')
+      + '</div></div>';
+  }).join("");
+}
+
+// ---------------------------------------------------------------- harita (VesselFinder)
+function haritaYukle(p){
+  HARITA_P = p;
+  var h = Math.max(300, $("harita-kap").clientHeight || 500);
+  var v = ['var width="100%";', 'var height="'+h+'";', 'var names=true;'];
+  if (p.imo || p.mmsi) {
+    if (p.imo) v.push('var imo="'+parseInt(p.imo,10)+'";');
+    if (p.mmsi) v.push('var mmsi="'+parseInt(p.mmsi,10)+'";');
+    v.push('var show_track=true;', 'var zoom="10";');
+  } else v.push('var latitude="'+p.lat+'";', 'var longitude="'+p.lon+'";', 'var zoom="'+p.zoom+'";');
+  var doc = '<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body{margin:0;overflow:hidden}</style></head><body>'
+    + '<script>'+v.join("")+'<\/script><script src="https://www.vesselfinder.com/aismap.js"><\/script></body></html>';
+  $("harita-baslik").textContent = p.ad || "";
+  $("harita-kap").innerHTML = "";
+  var f = document.createElement("iframe");
+  f.setAttribute("srcdoc", doc);
+  $("harita-kap").appendChild(f);
+}
+function haritadaGoster(){
+  var g = PANEL_GEMI; paneliKapat();
+  sayfaAc("harita", {imo:g.imo, mmsi:g.mmsi, ad:(g.ad||"")+(g.imo?"  •  IMO "+g.imo:"")});
+}
+function bolgeleriCiz(){
+  $("bolgeler").innerHTML = BOLGELER.map(function(b, i){ return '<button class="cip" onclick="haritaYukle({lat:'+b[1]+',lon:'+b[2]+',zoom:'+b[3]+',ad:\''+b[0]+'\'})">'+b[0]+'</button>'; }).join("");
+}
+
+// ---------------------------------------------------------------- ayarlar
+function ayarCiz(){
+  ["bildirim_takip","bildirim_trafik_plan","bildirim_trafik_anlik","servis_aktif"].forEach(function(k){ var x = $("a-"+k); if (x) x.checked = AYAR[k] !== false; });
+  $("pil-durum").textContent = AYAR.pil_serbest ? "✔ Pil kısıtlaması kapalı (arka plan kontrolü düzenli çalışır)."
+      : "⚠ Telefon pil tasarrufu için arka plan kontrolünü geciktirebilir. Kısıtlamayı kaldırın.";
+  $("pil-btn").style.display = AYAR.pil_serbest ? "none" : "";
+  var g = AYAR.guncelleme_bilgi || {};
+  $("surum-bilgi").textContent = "Uygulama " + (AYAR.apk_surum||"?") + " • Arayüz " + WEB_SURUM;
+  $("guncelleme-durum").textContent = (g.durum || "") + (g.zaman ? "  (" + g.zaman + ")" : "") + (AYAR.kurulum_hata ? "  • Son kurulum: " + AYAR.kurulum_hata : "");
+  $("yukle-btn").style.display = g.apk_var ? "" : "none";
+  $("banner").classList.toggle("acik", !!g.apk_var);
+  $("banner-metin").textContent = g.apk_var ? "⬆ Yeni sürüm hazır: " + (g.apk_ad||"") : "";
+}
+function ayar(x){ Yerel.ayarYaz(x.id.slice(2), x.checked ? "true" : "false"); AYAR[x.id.slice(2)] = x.checked; }
+function kodUygula(){
+  var r = Yerel.kurulumKodu($("kod").value);
+  if (r.indexOf("OK:")==0) { $("kod-sonuc").textContent = "✔ Uygulandı. " + r.slice(3) + " gemi takibe eklendi."; $("kod").value = ""; oku(); guncellemeKontrol(true); }
+  else $("kod-sonuc").textContent = "✖ " + r;
+}
+var gSayac = null;
+function guncellemeKontrol(goster){
+  Yerel.guncellemeKontrolBaslat();
+  if (goster) $("guncelleme-durum").textContent = "Kontrol ediliyor…";
+  var n = 0; clearInterval(gSayac);
+  gSayac = setInterval(function(){
+    var r = Yerel.sonuc("guncelleme", "");
+    if (!r && ++n < 60) return;
+    clearInterval(gSayac);
+    var d = json(r, {});
+    AYAR = json(Yerel.ayarGetir(), AYAR); ayarCiz();
+    if (d.web_yeni) Yerel.arayuzuYenile();          // yeni arayuz indi: hemen gecis yap
+  }, 1000);
+}
+var ySayac = null;
+function guncellemeYukle(){
+  $("guncelleme-durum").textContent = "İndiriliyor…";
+  Yerel.guncellemeYukleBaslat();
+  var n = 0; clearInterval(ySayac);
+  ySayac = setInterval(function(){
+    var r = Yerel.sonuc("yukle", "");
+    if (!r && ++n < 120) return;
+    clearInterval(ySayac);
+    $("guncelleme-durum").textContent = r=="ok" ? "Android onay ekranı açıldı — 'Güncelle'ye dokunun."
+        : r=="izin" ? "Bu uygulamaya 'bilinmeyen uygulamaları yükleme' izni verin, sonra geri gelip tekrar 'Yükle'ye dokunun."
+        : (r || "Zaman aşımı");
+  }, 1000);
+}
+
+// ---------------------------------------------------------------- gezinme
+function sayfaAc(s, harita){
+  if (s=="guncelleme") s = "ayarlar";
+  SAYFA = s;
+  [].forEach.call(document.querySelectorAll(".sayfa"), function(x){ x.classList.toggle("acik", x.id=="s-"+s); });
+  [].forEach.call(document.querySelectorAll("#nav button"), function(b){ b.classList.toggle("secili", b.dataset.s==s); });
+  if (s=="harita") setTimeout(function(){ if (harita || !HARITA_P) haritaYukle(harita || {lat:40.75,lon:28.6,zoom:8,ad:"Marmara"}); }, 30);
+  if (s=="trafik") trafikCiz();
+  document.querySelector("main").scrollTop = 0;
+}
+function geri(){
+  if ($("panel").classList.contains("acik")) { paneliKapat(); return true; }
+  if (SAYFA != "bogaz") { sayfaAc("bogaz"); return true; }
+  return false;
+}
+function oneGeldi(){ oku(); }
+
+// ---------------------------------------------------------------- acilis
+bolgeleriCiz();
+oku();
+var ac = Yerel.acilisSayfasi(); if (ac) sayfaAc(ac);
+if (!V.zaman) yenile();
+setInterval(function(){ trafikCiz(); takipCiz(); }, 60000);   // trafik durumu saate gore degisir
+setInterval(function(){ oku(); }, 120000);                     // arka plan servisinin yeni verisini goster
+setTimeout(function(){ guncellemeKontrol(false); }, 3000);
+</script>
+</body>
+</html>
