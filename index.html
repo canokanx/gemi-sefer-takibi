@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Gemi Sefer Takibi</title>
-<script>var WEB_SURUM = 6; /* GemiSeferTakibiArayuz */</script>
+<script>var WEB_SURUM = 7; /* GemiSeferTakibiArayuz */</script>
 <style>
 :root{
   --teal:#0E7C86; --teal-koyu:#0A5C63; --teal-acik:#E3F2F3; --mercan:#F2704F;
@@ -147,9 +147,9 @@ textarea{width:100%;min-height:70px;border:1px solid var(--cizgi);border-radius:
   <!-- AYARLAR -->
   <section class="sayfa" id="s-ayarlar">
     <div class="kutu">
-      <h3>Kurulum kodu</h3>
-      <div class="satir" style="margin-bottom:6px">Masaüstü programda Yönetici → "📱 Telefon Kurulum Kodu" ile alınan kodu buraya yapıştırın.
-        Güncelleme adresi, şirket adı ve takip listesi telefona aktarılır.</div>
+      <h3>Kurulum kodu (genelde gerekmez)</h3>
+      <div class="satir" style="margin-bottom:6px">Uygulama güncelleme adresini, şirket adını ve ekibin takip listesini kendiliğinden alır.
+        Kod yalnızca yönetici farklı bir adres verirse kullanılır.</div>
       <textarea id="kod" placeholder="GST1:…"></textarea>
       <button class="btn" onclick="kodUygula()">Kodu Uygula</button>
       <div class="satir" id="kod-sonuc"></div>
@@ -493,6 +493,7 @@ function guncellemeKontrol(goster){
     clearInterval(gSayac);
     var d = json(r, {});
     AYAR = json(Yerel.ayarGetir(), AYAR); ayarCiz();
+    oku();                                         // sirket adi / takip listesi gelmis olabilir
     // yeni arayuz indiyse ve calisan sayfa eskiyse bir kez yeniden yukle
     if (d.web_yeni && Number(AYAR.web_surum || 0) > WEB_SURUM) Yerel.arayuzuYenile();
   }, 1000);
