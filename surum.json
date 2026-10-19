@@ -1,9 +1,10 @@
 {
-  "masaustu_surum": "2.4.13",
+  "masaustu_surum": "2.4.14",
   "masaustu_dosya": "masaustu.zip",
   "notlar": "",
-  "tarih": "19.10.2026 03:03",
+  "tarih": "19.10.2026 03:33",
   "firma": "GULF ACENCY DENİZCİLİK A.Ş.",
+  "kanal": "gst-7b74291d0bc36c914b2a31515dc0756d",
   "takip": [
     {
       "k": "9429285",
@@ -19,9 +20,9 @@
     }
   ],
   "masaustu_url": "https://raw.githubusercontent.com/canokanx/gemi-sefer-takibi/main/masaustu.zip",
-  "apk_surum": 6,
-  "apk_ad": "1.5",
+  "apk_surum": 7,
+  "apk_ad": "1.6",
   "apk_url": "https://raw.githubusercontent.com/canokanx/gemi-sefer-takibi/main/GemiSeferTakibi.apk",
-  "web_surum": 7,
+  "web_surum": 8,
   "web_url": "https://raw.githubusercontent.com/canokanx/gemi-sefer-takibi/main/index.html"
 }
