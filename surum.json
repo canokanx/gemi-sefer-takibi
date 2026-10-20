@@ -1,9 +1,9 @@
 {
-  "masaustu_surum": "2.4.14",
+  "masaustu_surum": "2.4.15",
   "masaustu_dosya": "masaustu.zip",
   "notlar": "",
-  "tarih": "19.10.2026 03:33",
-  "firma": "GULF ACENCY DENİZCİLİK A.Ş.",
+  "tarih": "20.10.2026 04:27",
+  "firma": "GULF ACENCY DENİZCİLİK A.Ş. - MERKEZ",
   "kanal": "gst-7b74291d0bc36c914b2a31515dc0756d",
   "takip": [
     {
@@ -17,6 +17,42 @@
     {
       "k": "9516557",
       "ad": "AYA"
+    },
+    {
+      "k": "9118276",
+      "ad": "AYANA SEA"
+    },
+    {
+      "k": "9196307",
+      "ad": "F.F GLORY"
+    },
+    {
+      "k": "9244180",
+      "ad": "ELBE"
+    },
+    {
+      "k": "9260304",
+      "ad": "REGALO"
+    },
+    {
+      "k": "7129336",
+      "ad": "BRAVE KNIGHT"
+    },
+    {
+      "k": "9776731",
+      "ad": "MALIBU"
+    },
+    {
+      "k": "9558270",
+      "ad": "DAISY"
+    },
+    {
+      "k": "9551806",
+      "ad": "YM MARS"
+    },
+    {
+      "k": "9667370",
+      "ad": "SUZAN ALPAGÜL"
     }
   ],
   "masaustu_url": "https://raw.githubusercontent.com/canokanx/gemi-sefer-takibi/main/masaustu.zip",
